@@ -7,7 +7,7 @@ const app = express();
 
 const { UPLOAD_PATH } = process.env;
 
-const { Publisher, Auth } = require("./instagram");
+const { Publisher, Auth, Profile } = require("./instagram");
 
 const {
   InstagramException,
@@ -43,7 +43,7 @@ app.post("/auth/get-profile", async (req, res, next) => {
   const { username } = req.body;
   try {
     return res.send(
-      await Auth.Login({
+      await Auth.Profile({
         form: {
           username
         }
@@ -62,6 +62,22 @@ app.post("/auth/sign-in/verification/sms", async (req, res, next) => {
         form: {
           username,
           code
+        }
+      })
+    );
+  } catch (e) {
+    console.log(e);
+    return next(e);
+  }
+});
+
+app.post("/auth/sign-in/challenge-select", async (req, res, next) => {
+  const { username } = req.body;
+  try {
+    return res.send(
+      await Auth.ChallengeSelect({
+        form: {
+          username
         }
       })
     );

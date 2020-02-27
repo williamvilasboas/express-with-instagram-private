@@ -3,15 +3,16 @@ const path = require("path");
 const fs = require("fs");
 const { promisify } = require("util");
 const unlinkAsync = promisify(fs.unlink);
+const readFileAsync = promisify(fs.readFile);
 const { IgApiClient } = require("instagram-private-api");
 
 const { COOKIES_PATH } = process.env;
 
-const getFile = username => {
+const getFile = (username, type = "instagram") => {
   if (COOKIES_PATH === undefined) {
     throw new Error("ENV COOKIES_PATH not defined");
   }
-  return path.join(`${COOKIES_PATH}/instagram-${username}.json`);
+  return path.join(`${COOKIES_PATH}/${type}-${username}.json`);
 };
 
 const saveCookies = (data = {}, { username }) => {
@@ -40,6 +41,20 @@ const removeCookies = async ({ username }) => {
 const loadCookies = ({ username }) => {
   // here you would load the data
   return fs.readFileSync(getFile(username), "utf8");
+};
+
+const readTempFile = async ({ username }) => {
+  return await readFileAsync(getFile(username, "state"));
+};
+
+const saveTempFile = (data = {}, { username }) => {
+  var filename = getFile(username, "state");
+
+  fs.writeFileSync(filename, JSON.stringify(data), "utf8");
+
+  // here you would save it to a file/database etc.
+  // you could save it to a file: writeFile(path, JSON.stringify(data))
+  return data;
 };
 
 const InstagramFlux = async ({ form: { username } }) => {
@@ -93,6 +108,8 @@ module.exports = {
   loadCookies,
   removeCookies,
   InstagramFlux,
+  readTempFile,
+  saveTempFile,
   InstagramException,
   InstagramForbiddenException
 };
