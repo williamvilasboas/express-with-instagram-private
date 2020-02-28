@@ -42,6 +42,7 @@ npm run build
 ```js
 request("http://localhost:9028/auth/sign-in", {
   method: "POST",
+  json: true,
   data: {
     username: "",
     password: ""
@@ -54,6 +55,7 @@ request("http://localhost:9028/auth/sign-in", {
 ```js
 request("http://localhost:9028/auth/logout", {
   method: "POST",
+  json: true,
   data: {
     username: ""
   }
@@ -65,6 +67,7 @@ request("http://localhost:9028/auth/logout", {
 ```js
 request("http://localhost:9028/auth/get-profile", {
   method: "POST",
+  json: true,
   data: {
     username: ""
   }
@@ -76,6 +79,7 @@ request("http://localhost:9028/auth/get-profile", {
 ```js
 request("http://localhost:9028/auth/sign-in/verification/sms", {
   method: "POST",
+  json: true,
   data: {
     username: "",
     code: ""
@@ -83,14 +87,27 @@ request("http://localhost:9028/auth/sign-in/verification/sms", {
 });
 ```
 
+### Seleção de metodo de verificação
+
+```js
+request("http://localhost:9028/auth/sign-in/challenge-select", {
+  method: 'POST',
+  data: {
+    username: ""
+  },
+  json: true
+})
+```
+
 #### Publicação de Image
 
 ```js
 request("http://localhost:9028/publish/photo", {
   method: "POST",
+  json: true,
   data: {
     username: "",
-    filename: "", // o arquivo já deve esta no servidor
+    file: "", // o arquivo já deve esta no servidor
     caption: "Apenas um teste de postagem"
   }
 });
@@ -103,7 +120,7 @@ request("http://localhost:9028/publish/album", {
   method: "POST",
   data: {
     username: "",
-    filename: [""], // o arquivo já deve esta no servidor, tem que ser enviado ao menos 2 imagens!
+    files: [""], // o arquivo já deve esta no servidor, tem que ser enviado ao menos 2 imagens!
     caption: "Apenas um teste de postagem"
   }
 });
