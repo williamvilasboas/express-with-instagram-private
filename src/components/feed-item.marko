@@ -1,0 +1,52 @@
+$ {
+    if (input.caption === undefined) {
+        input.caption = {};
+    }
+    const {
+        image_versions2,
+        carrousel,
+        comment_count,
+        like_count,
+        video,
+        caption: { text }
+    } = input;
+    const img = image_versions2.candidates.find(img => img.width === 360 && img.height >= 180);
+}
+<div class="feed-item">
+    <a class="feed-item-link">
+        <div class="feed-item-media">
+            <div class="feed-item-media-wrapper">
+                <img class="feed-item-img" src=img.url>
+                <span class="feed-item-icon">
+                    <if(carrousel)>
+                        <icon-carrousel />
+                    </if>
+                    <if(video)>
+                        <icon-video />
+                    </if>
+                </span>
+            </div>
+        </div>
+        <div class="feed-item-overlay">
+            <div class="feed-item-overlay-content">
+                <div class="feed-item-overlay-counters">
+                    <div class="feed-item-overlay-likes-counts">
+                        <icon-like />
+                        <div class="feed-item-overlay-label">
+                            ${like_count}
+                        </div>
+                    </div>
+                    <div class="feed-item-overlay-comments-counts">
+                        <icon-comment />
+                        <div class="feed-item-overlay-label">
+                            ${comment_count}
+                        </div>
+                    </div>
+                </div>
+                <div class="feed-item-overlay-text">
+                    ${text}
+                </div>
+            </div>
+        </div>
+    </a>
+</div>

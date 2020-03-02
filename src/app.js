@@ -1,13 +1,21 @@
+require("marko/node-require");
+
 const express = require("express");
 
 const bodyParser = require("body-parser");
 const path = require("path");
 
+const markoExpress = require("marko/express");
+
 const app = express();
 
 const { UPLOAD_PATH } = process.env;
 
-const { Publisher, Auth, Profile } = require("./instagram");
+const { Publisher, Auth, Feed } = require("./instagram");
+
+const routes = require("./routes");
+
+app.use(markoExpress());
 
 const {
   InstagramException,
@@ -87,6 +95,19 @@ app.post("/auth/sign-in/challenge-select", async (req, res, next) => {
   }
 });
 
+app.post("/auth/logout", async (req, res, next) => {
+  try {
+    const { username } = req.body;
+    return res.send(
+      await Auth.Logout.Logout({
+        form: { username }
+      })
+    );
+  } catch (err) {
+    return next(err);
+  }
+});
+
 app.post("/publish/photo", async (req, res, next) => {
   try {
     const { username, file, caption } = req.body;
@@ -121,18 +142,16 @@ app.post("/publish/album", async (req, res, next) => {
   }
 });
 
-app.post("/auth/logout", async (req, res, next) => {
+app.post("/feed/store", async (req, res, next) => {
   try {
-    const { username } = req.body;
-    return res.send(
-      await Auth.Logout.Logout({
-        form: { username }
-      })
-    );
+    const { username, usernamefeed } = req.body;
+    return res.send(await Feed.History({ form: { username, usernamefeed } }));
   } catch (err) {
     return next(err);
   }
 });
+
+app.use(routes);
 
 app.use(async (err, req, res, next) => {
   if (
@@ -141,6 +160,7 @@ app.use(async (err, req, res, next) => {
   ) {
     return res.status(err.status).send(err.toJson());
   }
+  console.log(err);
   return res.status(500).send(err);
 });
 

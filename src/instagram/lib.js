@@ -4,15 +4,21 @@ const fs = require("fs");
 const { promisify } = require("util");
 const unlinkAsync = promisify(fs.unlink);
 const readFileAsync = promisify(fs.readFile);
+const writeFileAsync = promisify(fs.writeFile);
+const existAsync = promisify(fs.exists);
 const { IgApiClient } = require("instagram-private-api");
 
-const { COOKIES_PATH } = process.env;
+const { COOKIES_PATH, TEMP_PATH } = process.env;
 
-const getFile = (username, type = "instagram") => {
-  if (COOKIES_PATH === undefined) {
-    throw new Error("ENV COOKIES_PATH not defined");
+const getFile = (
+  username,
+  type = "instagram",
+  options = { path: COOKIES_PATH }
+) => {
+  if (options.path === undefined) {
+    throw new Error(`ENV ${options.path} not defined`);
   }
-  return path.join(`${COOKIES_PATH}/${type}-${username}.json`);
+  return path.join(`${options.path}/${type}-${username}.json`);
 };
 
 const saveCookies = (data = {}, { username }) => {
@@ -43,14 +49,23 @@ const loadCookies = ({ username }) => {
   return fs.readFileSync(getFile(username), "utf8");
 };
 
-const readTempFile = async ({ username }) => {
-  return await readFileAsync(getFile(username, "state"));
+const readTempFile = async ({ username, type = "state" }) => {
+  return await readFileAsync(getFile(username, type, { path: TEMP_PATH }));
 };
 
-const saveTempFile = (data = {}, { username }) => {
-  var filename = getFile(username, "state");
+const existTempFile = async ({ username, type = "state" }) => {
+  const filename = getFile(username, type, { path: TEMP_PATH });
+  if (await existAsync(filename)) {
+    return true;
+  }
+  // here you would check if the data exists
+  return false;
+};
 
-  fs.writeFileSync(filename, JSON.stringify(data), "utf8");
+const saveTempFile = async (data = {}, { username, type = "state" }) => {
+  var filename = getFile(username, type, { path: TEMP_PATH });
+
+  await writeFileAsync(filename, JSON.stringify(data), "utf8");
 
   // here you would save it to a file/database etc.
   // you could save it to a file: writeFile(path, JSON.stringify(data))
@@ -110,6 +125,7 @@ module.exports = {
   InstagramFlux,
   readTempFile,
   saveTempFile,
+  existTempFile,
   InstagramException,
   InstagramForbiddenException
 };
