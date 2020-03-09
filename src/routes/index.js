@@ -6,8 +6,8 @@ router.get(
   "/embed/feed/:username/:target/:template?",
   async (req, res, next) => {
     try {
-      const { username, target, template } = req.params;
-      const template = require(`../views/${template || "default"}`);
+      const { username, target, template: templateParam } = req.params;
+      const template = require(`../views/${templateParam || "default"}`);
 
       const feedItems = await request("http://localhost:9028/feed/store", {
         method: "POST",
