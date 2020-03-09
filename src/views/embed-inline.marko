@@ -1,0 +1,32 @@
+<style-css/>
+<div class="feeds">
+    <for|row, index| of=input.list>
+        <if(row.image_versions2 !== undefined && row.image_versions2 !== null && row.media_type !== 2)>
+            <feed-item ...row />
+        </if>
+        <else-if(row.media_type === 2 && row.video_versions !== undefined)>
+            <feed-video ...row />
+        </else-if>
+        <else>
+            <if(row.carousel_media_count > 0 && row.carousel_media !== undefined)>
+                <carrousel ...row />
+            </if>
+        </else>
+    </for>
+</div>
+<script type='text/javascript'>
+    var elements = document.getElementsByClassName('feed-item-link');
+    for(var i=0;i< elements.length;i++) {
+        var element = elements[i];
+        element.addEventListener('mouseover', function (event) {
+            var sub = this.getElementsByClassName('feed-item-overlay')[0];
+            sub.classList.add('active');
+            this.classList.add('overlay')
+        });
+        element.addEventListener('mouseleave', function (event) {
+            var sub = this.getElementsByClassName('feed-item-overlay')[0];
+            sub.classList.remove('active');
+            this.classList.remove('overlay');
+        });
+    }
+</script>
