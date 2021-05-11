@@ -18,7 +18,7 @@
     "express": "^4.17.1",
     "inquirer": "^7.0.4",
     "instagram-private-api": "^1.39.0",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.21",
     "marko": "^4.19.1",
     "request-promise": "^4.2.5",
     "tough-cookie-filestore2": "^1.0.0"
