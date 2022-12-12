@@ -15,7 +15,7 @@
     "bluebird": "^3.7.2",
     "body-parser": "^1.19.0",
     "dotenv-flow": "^3.1.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "inquirer": "^7.0.4",
     "instagram-private-api": "^1.39.0",
     "lodash": "^4.17.19",
